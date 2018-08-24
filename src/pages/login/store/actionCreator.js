@@ -1,38 +1,70 @@
 import * as types from './actionTypes.js';
-import axios from 'axios';
+import {  message } from 'antd';
+import {  request,setUserName } from 'util';
+import {  LOGIN_ADMIN } from 'api';
 
 
-export const changeValueAction = (payload)=>{
+export const getLoginRequestAction = ()=>{
 	return ({
-		type:types.CHANGE_VALUE,
-		payload
+		type:types.LOGIN_REQUEST
 	})
 }
-export const loadInitDataAction = (payload)=>{
+export const getLoginDoneAction = ()=>{
 	return ({
-		type:types.LOAD_INIT_DATA,
-		payload
+		type:types.LOGIN_DONE
 	})
 }
-export const addItemAction = ()=>{
-	return ({
-		type:types.ADD_ITEM
-	})
-}
-export const delItemAction = (payload)=>{
-	return ({
-		type:types.DEL_ITEM,
-		payload
-	})
-}
-export const getInitDataAction = ()=>{
+export const getLoginAction = (values)=>{
 	return (dispatch)=>{
-		axios
-		.get('http://127.0.0.1:8060')
-		.then((data)=>{
-			// console.log(data);
-			const action = loadInitDataAction(data.data);
-			dispatch(action);
+	/*
+		const action = getLoginRequestAction();
+		dispatch(action);
+		axios({
+			method: 'post',
+			url: 'http://127.0.0.1:8060/admin/login',
+			data: values
 		})
+		.then(function (result) {
+			let data = result.data;
+			if (data.code === 0) {
+				window.location.href = '/';
+				const action = getLoginDoneAction();
+				dispatch(action);
+			} else if (data.code === 10) {
+				message.error(data.message);
+				const action = getLoginDoneAction();
+				dispatch(action);
+			}
+		})
+		.catch(function (err) {
+			console.log(err);
+			const action = getLoginDoneAction();
+			dispatch(action);
+		});
+	*/
+		const action = getLoginRequestAction();
+		dispatch(action);
+		request({
+			method: 'post',
+			url: LOGIN_ADMIN,
+			data: values
+		})
+		.then(function (result) {
+			if (result.code === 0) {
+				setUserName(result.data.username);
+				window.location.href = '/';
+				const action = getLoginDoneAction();
+				dispatch(action);
+			} else if (result.code === 1) {
+				message.error(result.message);
+				const action = getLoginDoneAction();
+				dispatch(action);
+			}
+		})
+		.catch(function (err) {
+			console.log(err);
+			const action = getLoginDoneAction();
+			dispatch(action);
+		});
 	}
 }

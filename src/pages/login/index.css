@@ -1,7 +1,12 @@
 .Login{
 	margin: 100px auto;
-	max-width: 300px;
+	width: 200px;
+	height: 180px;
+	/*border: 1px solid #000;*/
 }
 li{
 	margin-top: 10px;
+}
+.login-form-button{
+	width: 200px;
 }
