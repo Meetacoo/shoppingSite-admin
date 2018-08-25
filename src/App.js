@@ -1,17 +1,19 @@
 import React, { Component } from 'react';
-import Login from './pages/login';
-import { getUserName } from 'util';
 import {
 	BrowserRouter as Router,
 	// HashRouter as Router,
 	Route,
-	Link,
 	Switch,
 	Redirect
 } from 'react-router-dom';
-// import store from './store';
 import './App.css';
+
+import { getUserName } from 'util';
 import Home from 'pages/home/'
+import Login from './pages/login';
+import User from './pages/user';
+import ErrorPage from './pages/errorpage'
+
 class App extends Component {
 	render() {
 		const ProtectedRoute = ({component:Component,...rest})=>(
@@ -26,24 +28,22 @@ class App extends Component {
 					)
 			}
 			/>
-			)
-				
+		)
 		const LoginRoute = ({component:Component,...rest})=>{
 			if (getUserName()) {
-				return <Route to='/'/>
+				return <Redirect to='/'/>
 			}else{
 				return <Route {...rest} component={Component}/>
 			}
-
-
-		}		
-				
+		}
 		return (
 			<Router>
-				<div className="box">
-					<ProtectedRoute path="/" component={ Home } />
+				<Switch>
+					<ProtectedRoute exact path="/" component={ Home } />
+					<ProtectedRoute path="/user" component={ User } />
 					<LoginRoute path="/login" component={ Login } />
-				</div>
+					<Route component={ ErrorPage } />
+				</Switch>
 			</Router>
 		);
 	}

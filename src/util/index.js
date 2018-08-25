@@ -5,12 +5,14 @@ export const request = (options)=>{
 		axios({
 			method: options.method || 'get',
 			url: options.url || '',
-			data: options.data || null
+			data: options.data || null,
+			withCredentials: true
 		})
 		.then(result => {
 			let data = result.data;
-			if (data.code === 0) {
-				// window.location.href = '/';
+			if (data.code === 0) { 
+				removeUserName();
+				window.location.href = '/login';
 				resolve(data)
 			} else if (data.code === 1) {
 				// message.error(data.message);

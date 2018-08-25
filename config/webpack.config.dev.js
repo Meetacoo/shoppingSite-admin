@@ -91,6 +91,7 @@ module.exports = {
       pages:path.resolve(__dirname,'../src/pages/'),
       util:path.resolve(__dirname,'../src/util/'),
       api:path.resolve(__dirname,'../src/api/'),
+      common:path.resolve(__dirname,'../src/common/'),
     },
     plugins: [
       // Prevents users from importing files from outside of src/ (or node_modules/).

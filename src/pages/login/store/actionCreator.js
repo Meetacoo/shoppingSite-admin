@@ -59,7 +59,12 @@ export const getLoginAction = (values)=>{
 				message.error(result.message);
 				const action = getLoginDoneAction();
 				dispatch(action);
+			} else {
+				console.log('action....')
+				const action = getLoginDoneAction();
+				dispatch(action);
 			}
+				
 		})
 		.catch(function (err) {
 			console.log(err);
