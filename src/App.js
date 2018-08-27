@@ -12,6 +12,7 @@ import { getUserName } from 'util';
 import Home from 'pages/home/'
 import Login from './pages/login';
 import User from './pages/user';
+import Category from './pages/category';
 import ErrorPage from './pages/errorpage'
 
 class App extends Component {
@@ -20,7 +21,6 @@ class App extends Component {
 			<Route 
 				{...rest}
 				render={props=>(
-
 					getUserName()
 					?<Component  /> 
 					:(<Redirect to='/login'
@@ -31,7 +31,7 @@ class App extends Component {
 		)
 		const LoginRoute = ({component:Component,...rest})=>{
 			if (getUserName()) {
-				return <Redirect to='/'/>
+				return <Redirect to='/' />
 			}else{
 				return <Route {...rest} component={Component}/>
 			}
@@ -41,6 +41,7 @@ class App extends Component {
 				<Switch>
 					<ProtectedRoute exact path="/" component={ Home } />
 					<ProtectedRoute path="/user" component={ User } />
+					<ProtectedRoute path="/category" component={ Category } />
 					<LoginRoute path="/login" component={ Login } />
 					<Route component={ ErrorPage } />
 				</Switch>

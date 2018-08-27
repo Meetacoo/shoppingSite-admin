@@ -15,6 +15,7 @@ export const getCountAction = (values)=>{
 			url: ADMIN_COUNT
 		})
 		.then(function (result) {
+			console.log('after axios',result);
 			if (result.code === 0) {
 				dispatch(setCountAction(result))
 			} else if (result.code === 1) {

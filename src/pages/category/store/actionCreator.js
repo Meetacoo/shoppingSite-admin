@@ -1,48 +1,45 @@
 import * as types from './actionTypes.js';
 import {  message } from 'antd';
 import {  request,setUserName } from 'util';
-import {  LOGIN_ADMIN } from 'api';
+import {  CATE_NAME } from 'api';
 
 
-export const getLoginRequestAction = ()=>{
+export const getAddRequestAction = ()=>{
 	return ({
-		type:types.LOGIN_REQUEST
+		type:types.CATEGORY_REQUEST
 	})
 }
-export const getLoginDoneAction = ()=>{
+export const getAddDoneAction = ()=>{
 	return ({
-		type:types.LOGIN_DONE
+		type:types.CATEGORY_DONE
 	})
 }
-export const getLoginAction = (values)=>{
+export const getAddAction = (values)=>{
 	return (dispatch)=>{
-		const action = getLoginRequestAction();
+		const action = getAddRequestAction();
 		dispatch(action);
 		request({
 			method: 'post',
-			url: LOGIN_ADMIN,
+			url: CATE_NAME,
 			data: values
 		})
 		.then(function (result) {
 			if (result.code === 0) {
 				setUserName(result.data.username);
 				window.location.href = '/';
-				const action = getLoginDoneAction();
-				dispatch(action);
+				dispatch(getAddDoneAction());
 			} else if (result.code === 1) {
 				message.error(result.message);
-				const action = getLoginDoneAction();
-				dispatch(action);
+				dispatch(getAddDoneAction());
 			} else {
 				console.log('action....')
-				const action = getLoginDoneAction();
-				dispatch(action);
+				dispatch(getAddDoneAction());
 			}
 				
 		})
 		.catch(function (err) {
 			console.log(err);
-			const action = getLoginDoneAction();
+			const action = getAddDoneAction();
 			dispatch(action);
 		});
 	}
