@@ -6,4 +6,5 @@ export const ADMIN_COUNT = server+'/admin/count';
 export const GET_USERS = server+'/admin/users';
 
 
-export const CATE_NAME = server+'/category';
+export const ADD_CATEGORY = server+'/category';
+export const GET_CATEGORIES = server+'/category';

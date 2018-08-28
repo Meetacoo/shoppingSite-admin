@@ -5,7 +5,9 @@
 li{
 	margin-top: 10px;
 }
-.ant-table-wrapper{
+.ant-table-wrapper,
+.ant-form,
+.catelist {
 	margin-top: 20px;
 }
 .ant-form-item-control-wrapper{

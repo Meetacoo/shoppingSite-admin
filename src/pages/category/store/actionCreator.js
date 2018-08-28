@@ -1,17 +1,39 @@
 import * as types from './actionTypes.js';
 import {  message } from 'antd';
-import {  request,setUserName } from 'util';
-import {  CATE_NAME } from 'api';
+import {  request } from 'util';
+import {  ADD_CATEGORY,GET_CATEGORIES } from 'api';
 
 
 export const getAddRequestAction = ()=>{
 	return ({
-		type:types.CATEGORY_REQUEST
+		type:types.ADD_REQUEST
 	})
 }
 export const getAddDoneAction = ()=>{
 	return ({
-		type:types.CATEGORY_DONE
+		type:types.ADD_DONE
+	})
+}
+export const setLevelOneCategoriesAction = (payload)=>{
+	return ({
+		type:types.SET_LEVEL_ONE,
+		payload
+	})
+}
+export const getPageRequestAction = ()=>{
+	return ({
+		type:types.PAGE_REQUEST
+	})
+}
+export const getPageDoneAction = ()=>{
+	return ({
+		type:types.PAGE_DONE
+	})
+}
+export const getSetPageAction = (payload)=>{
+	return ({
+		type:types.SET_PAGE,
+		payload
 	})
 }
 export const getAddAction = (values)=>{
@@ -20,22 +42,20 @@ export const getAddAction = (values)=>{
 		dispatch(action);
 		request({
 			method: 'post',
-			url: CATE_NAME,
+			url: ADD_CATEGORY,
 			data: values
 		})
 		.then(function (result) {
 			if (result.code === 0) {
-				setUserName(result.data.username);
-				window.location.href = '/';
-				dispatch(getAddDoneAction());
-			} else if (result.code === 1) {
-				message.error(result.message);
-				dispatch(getAddDoneAction());
-			} else {
-				console.log('action....')
-				dispatch(getAddDoneAction());
+				if (result.data) {
+					dispatch(setLevelOneCategoriesAction(result.data));
+				}
+				message.success('添加分类成功')
+				// getLevelOneCategoriesAction();
+			}else{
+				message.error(result.message)
 			}
-				
+			dispatch(getAddDoneAction());
 		})
 		.catch(function (err) {
 			console.log(err);
@@ -44,3 +64,50 @@ export const getAddAction = (values)=>{
 		});
 	}
 }
+export const getLevelOneCategoriesAction = ()=>{
+	return (dispatch)=>{
+		dispatch(getAddRequestAction());
+		request({
+			url: GET_CATEGORIES,
+			data: {
+				pid:0
+			}
+		})
+		.then(function (result) {
+			if (result.code === 0) {
+				console.log(result);
+			}else{
+				message.error(result.message)
+			}
+			dispatch(setLevelOneCategoriesAction(result.data));
+		})
+		.catch(function (err) {
+			message.error('操作失败');
+		});
+	}
+}
+export const getPageAction = (pid,page)=>{
+	return (dispatch)=>{
+		dispatch(getPageRequestAction());
+		request({
+			url: GET_CATEGORIES,
+			data: {
+				pid:pid,
+				page:page
+			}
+		})
+		.then(function (result) {
+			if (result.code === 0) {
+				// console.log('result::::::',result);
+				dispatch(getSetPageAction(result.data));
+			}else{
+				message.error(result.message)
+			}
+			dispatch(getPageDoneAction());
+		})
+		.catch(function (err) {
+			message.error('操作失败la');
+		});
+	}
+}
+

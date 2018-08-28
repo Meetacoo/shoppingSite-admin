@@ -23,10 +23,8 @@ class App extends Component {
 				render={props=>(
 					getUserName()
 					?<Component  /> 
-					:(<Redirect to='/login'
-						/>)
-					)
-			}
+					:<Redirect to='/login/'/>
+				)}
 			/>
 		)
 		const LoginRoute = ({component:Component,...rest})=>{

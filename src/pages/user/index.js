@@ -74,7 +74,7 @@ class User extends Component {
 				createdAt:moment(user.get('createdAt')).format('YYYY-MM-DD HH:mm:ss')
 			}
 		}).toJS();
-		console.log(data)
+		// console.log(data)
 		return (
 			<div>
 				<MyLayout>

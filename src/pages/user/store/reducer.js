@@ -3,10 +3,10 @@ import { fromJS } from 'immutable';
 
 const defaultState = fromJS({
 	isFatching:false,
-	current:1,
-	total:300,
+	current:0,
+	total:0,
 	list:[],
-	pageSize:10
+	pageSize:0
 })
 export default function(state = defaultState,action){
 	if (action.type === types.SET_PAGE) {

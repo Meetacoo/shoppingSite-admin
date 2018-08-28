@@ -21,7 +21,7 @@ export const request = (options)=>{
 			if (data.code === 0) { 
 				// window.location.href = '/login';
 				resolve(data)
-			} else if (data.code === 1) {
+			} else if (data.code === 10) {
 				// message.error(data.message);
 				removeUserName();
 				window.location.href = '/login';
