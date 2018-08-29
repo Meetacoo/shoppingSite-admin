@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { InputNumber,Breadcrumb,Button,Table,Divider,Modal } from 'antd';
+import { InputNumber,Breadcrumb,Button,Table,Divider,Modal,Input } from 'antd';
 import { connect } from 'react-redux';
 
 
@@ -25,7 +25,7 @@ class CategoryList extends Component {
 		// console.log(this.props);
 		let oldPath = preProps.location.pathname;
 		let newPath = this.props.location.pathname;
-		if (oldPath !== newPath) {
+		if (oldPath != newPath) {
 			// console.log(this.props.match.params.pid);
 			let newPid = this.props.match.params.pid || 0;
 			this.setState ({
@@ -84,9 +84,9 @@ class CategoryList extends Component {
 			return {
 				key:category.get('_id'),
 				id:category.get('_id'),
-				pid:category.get('pid'),
 				name:category.get('name'),
 				order:category.get('order'),
+				pid:category.get('pid'),
 			}
 		}).toJS();
 		// console.log(data)
@@ -123,6 +123,7 @@ class CategoryList extends Component {
 							} 
 						}
 						onChange={(pagination)=>{
+							// console.log(pagination.current)
 							this.props.handlePage(this.state.pid,pagination.current)
 						}}
 						loading={
@@ -138,7 +139,7 @@ class CategoryList extends Component {
 						onOk={this.props.handleUpdateName}
 						onCancel={this.props.handleCancelName}
 					>
-						<p>Some contents...</p>
+						<Input />
 					</Modal>
 				</div>
 			</MyLayout>
@@ -153,7 +154,8 @@ const mapStateToProps = (state)=>{
 		total:state.get('category').get('total'),
 		pageSize:state.get('category').get('pageSize'),
 		list:state.get('category').get('list'),
-		updateModalVisible:state.get('category').get('updateModalVisible')
+		updateModalVisible:state.get('category').get('updateModalVisible'),
+		handleCancelName:state.get('category').get('handleCancelName')
 	}
 }
 
@@ -164,6 +166,9 @@ const mapDispatchToProps = (dispatch)=>{
 		},
 		showUpdateModal:(updateId,updateName)=>{
 			dispatch(actionCreator.getShowUpdateModalAction(updateId,updateName));
+		},
+		handleCancelName:()=>{
+			dispatch(actionCreator.getHideUpdateModalAction());
 		}
 	}
 }

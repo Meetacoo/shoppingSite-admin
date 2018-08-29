@@ -5,3 +5,4 @@ export const PAGE_REQUEST = "category/PAGE_REQUEST";
 export const PAGE_DONE = "category/PAGE_DONE";
 export const SET_PAGE = "category/SET_PAGE";
 export const SHOW_UPDATE_MODAl = "category/SHOW_UPDATE_MODAl";
+export const HIDE_UPDATE_MODAl = "category/HIDE_UPDATE_MODAl";

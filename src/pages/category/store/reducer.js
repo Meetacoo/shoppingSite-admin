@@ -8,7 +8,10 @@ const defaultState = fromJS({
 	current:0,
 	total:0,
 	list:[],
-	pageSize:0
+	pageSize:0,
+	updateModalVisible:false,
+	updateId:'',
+	updateName:''
 })
 export default function(state = defaultState,action){
 	if (action.type === types.ADD_REQUEST) {
@@ -39,11 +42,15 @@ export default function(state = defaultState,action){
 
 	if (action.type === types.SHOW_UPDATE_MODAl) {
 		return state.merge({
-			showUpdateModal:true,
-			current:action.payload.current,
-			total:action.payload.total,
-			pageSize:action.payload.pageSize,
-			list:fromJS(action.payload.list)
+			updateModalVisible:true,
+			updateId:action.payload.updateId,
+			updateName:action.payload.updateName
+		})
+	}
+
+	if (action.type === types.HIDE_UPDATE_MODAl) {
+		return state.merge({
+			updateModalVisible:false
 		})
 	}
 	return state;

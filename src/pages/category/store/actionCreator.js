@@ -57,10 +57,9 @@ export const getAddAction = (values)=>{
 			}
 			dispatch(getAddDoneAction());
 		})
-		.catch(function (err) {
-			console.log(err);
-			const action = getAddDoneAction();
-			dispatch(action);
+		.catch((err)=> {
+			message.error('网络错误,请稍后在试!')
+			dispatch(getAddDoneAction());
 		});
 	}
 }
@@ -75,11 +74,12 @@ export const getLevelOneCategoriesAction = ()=>{
 		})
 		.then(function (result) {
 			if (result.code === 0) {
-				console.log(result);
+				// console.log(result);
+				dispatch(setLevelOneCategoriesAction(result.data))
 			}else{
 				message.error(result.message)
 			}
-			dispatch(setLevelOneCategoriesAction(result.data));
+			// dispatch(setLevelOneCategoriesAction(result.data));
 		})
 		.catch(function (err) {
 			message.error('操作失败');
@@ -96,7 +96,7 @@ export const getPageAction = (pid,page)=>{
 				page:page
 			}
 		})
-		.then(function (result) {
+		.then((result)=> {
 			if (result.code === 0) {
 				// console.log('result::::::',result);
 				dispatch(getSetPageAction(result.data));
@@ -105,9 +105,24 @@ export const getPageAction = (pid,page)=>{
 			}
 			dispatch(getPageDoneAction());
 		})
-		.catch(function (err) {
+		.catch((err) => {
 			message.error('操作失败la');
+			dispatch(getPageDoneAction());
 		});
 	}
 }
 
+export const getShowUpdateModalAction = (updateId,updateName)=>{
+	return ({
+		type:types.SHOW_UPDATE_MODAl,
+		payload:{
+			updateId,
+			updateName
+		}
+	})
+}
+export const getHideUpdateModalAction = (updateId,updateName)=>{
+	return ({
+		type:types.HIDE_UPDATE_MODAl
+	})
+}
