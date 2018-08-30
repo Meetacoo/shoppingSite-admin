@@ -8,3 +8,5 @@ export const GET_USERS = server+'/admin/users';
 
 export const ADD_CATEGORY = server+'/category';
 export const GET_CATEGORIES = server+'/category';
+export const UPDATE_NAME = server+'/category/updateName';
+export const UPDATE_ORDER = server+'/category/updateOrder';

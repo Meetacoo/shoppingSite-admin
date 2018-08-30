@@ -26,6 +26,28 @@ class NormalCategoryAdd extends Component {
 	}
 	render(){
 		const { getFieldDecorator } = this.props.form;
+		const formItemLayout = {
+			labelCol: {
+				xs: { span: 24 },
+				sm: { span: 4 },
+			},
+			wrapperCol: {
+				xs: { span: 24 },
+				sm: { span: 20 },
+			},
+		};
+		const tailFormItemLayout = {
+			wrapperCol: {
+				xs: {
+					span: 24,
+					offset: 4,
+				},
+				sm: {
+					span: 16,
+					offset: 4,
+				},
+			},
+		};
 		return(
 			<MyLayout>
 				<Breadcrumb>
@@ -34,6 +56,7 @@ class NormalCategoryAdd extends Component {
 				</Breadcrumb>
 				<Form onSubmit={this.handleSubmit}>
 					<FormItem
+						{...formItemLayout}
 						label="分类名称"
 					>
 						{getFieldDecorator('name', {
@@ -46,6 +69,7 @@ class NormalCategoryAdd extends Component {
 						)}
 					</FormItem>
 					<FormItem
+						{...formItemLayout}
 						label="分类名称"
 					>
 						{getFieldDecorator('pid', {
@@ -63,7 +87,7 @@ class NormalCategoryAdd extends Component {
 							</Select>
 						)}
 					</FormItem>
-					<FormItem>
+					<FormItem {...tailFormItemLayout}>
 						<Button 
 							type="primary" 
 							onClick={this.handleSubmit} 

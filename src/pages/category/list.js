@@ -52,7 +52,12 @@ class CategoryList extends Component {
 				dataIndex: 'order',
 				key: 'order',
 				render:(order,record)=>{
-					return <InputNumber defaultValue={order}  />
+					return <InputNumber 
+						defaultValue={order} 
+						onBlur={(e)=>{
+							this.props.handleUpdateOrder(record.pid,record.id,e.target.value)
+						}} 
+					/>
 				}
 			},
 			{
@@ -136,10 +141,18 @@ class CategoryList extends Component {
 					<Modal
 						title="修改分类名称"
 						visible={this.props.updateModalVisible}
-						onOk={this.props.handleUpdateName}
-						onCancel={this.props.handleCancelName}
+						onOk={()=>{
+							this.props.handleUpdateName(this.state.pid)
+						}}
+						onCancel={this.props.handleCancelName} 
+						confirmLoading={this.props.isUpdateFetching}
 					>
-						<Input />
+						<Input 
+							value={this.props.updateName} 
+							onChange = {(e)=>{
+								{this.props.handleChangeName(e.target.value)}
+							}}
+						/>
 					</Modal>
 				</div>
 			</MyLayout>
@@ -155,7 +168,8 @@ const mapStateToProps = (state)=>{
 		pageSize:state.get('category').get('pageSize'),
 		list:state.get('category').get('list'),
 		updateModalVisible:state.get('category').get('updateModalVisible'),
-		handleCancelName:state.get('category').get('handleCancelName')
+		updateName:state.get('category').get('updateName'),
+		isUpdateFetching:state.get('category').get('isUpdateFetching')
 	}
 }
 
@@ -169,6 +183,15 @@ const mapDispatchToProps = (dispatch)=>{
 		},
 		handleCancelName:()=>{
 			dispatch(actionCreator.getHideUpdateModalAction());
+		},
+		handleChangeName:(newName)=>{
+			dispatch(actionCreator.getChangeNameAction(newName));
+		},
+		handleUpdateName:(pid)=>{
+			dispatch(actionCreator.getSetUpdateNameAction(pid));
+		},
+		handleUpdateOrder:(pid,id,newOrder)=>{
+			dispatch(actionCreator.getUpdateOrderAction(pid,id,newOrder));
 		}
 	}
 }

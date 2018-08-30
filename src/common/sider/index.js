@@ -20,7 +20,7 @@ class MySider extends Component {
 						</NavLink>
 					</Menu.Item>
 					<Menu.Item key="2">
-						<NavLink to="/user">
+						<NavLink to="/user"> 
 							<Icon type="user" />用户中心
 						</NavLink>
 					</Menu.Item>
@@ -30,7 +30,7 @@ class MySider extends Component {
 						</NavLink>
 					</Menu.Item>
 					<Menu.Item key="4">
-						<NavLink to="/category">
+						<NavLink to="/product">
 							<Icon type="book" />商品管理
 						</NavLink>
 					</Menu.Item>
