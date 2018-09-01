@@ -1,7 +1,7 @@
 import * as types from './actionTypes.js';
 import {  message } from 'antd';
 import {  request } from 'util';
-import {  ADD_CATEGORY,GET_CATEGORIES,UPDATE_NAME,UPDATE_ORDER } from 'api';
+import {  ADD_CATEGORY,GET_CATEGORIES,UPDATE_NAME,UPDATE_CATEGORY_ORDER } from 'api';
 
 
 export const getAddRequestAction = ()=>{
@@ -192,7 +192,7 @@ export const getUpdateOrderAction = (pid,id,newOrder)=>{
 		const state = getState().get('category')
 		request({
 			method: 'put',
-			url: UPDATE_ORDER,
+			url: UPDATE_CATEGORY_ORDER,
 			data: {
 				id:id,
 				order:newOrder,
@@ -206,14 +206,14 @@ export const getUpdateOrderAction = (pid,id,newOrder)=>{
 					dispatch(getSetPageAction(result.data));
 					dispatch(getHideUpdateModalAction());
 				}
-				message.success('更改名称成功');
+				message.success('更改排序成功');
 				// console.log('result::::::',result);
 			}else{
 				message.error(result.message)
 			}
 		})
 		.catch((err) => {
-			message.error('更改名称失败');
+			message.error('更改排序失败');
 		});
 	}
 }

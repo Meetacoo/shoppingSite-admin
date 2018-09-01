@@ -32,7 +32,7 @@ class App extends Component {
 			if (getUserName()) {
 				return <Redirect to='/' />
 			}else{
-				return <Route {...rest} component={Component}/>
+	 			return <Route {...rest} component={Component}/>
 			}
 		}
 		return (

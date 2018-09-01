@@ -2,30 +2,56 @@ import * as types from './actionTypes.js';
 import { fromJS } from 'immutable';
 
 const defaultState = fromJS({
-	isAddFetching:false,
-	levelonecategories:[],
+	parentCategoryId:'',
+	categoryId:'',
+	images:'',
+	detail:'',
+	categoryIdValidateStatus:'',
+	categoryIdHelp:'',
+	isSaveFatching:false,
 	isPageFetching:false,
 	current:0,
 	total:0,
 	list:[],
 	pageSize:0,
-	updateModalVisible:false,
-	updateId:'',
-	updateName:'',
-	isUpdateFetching:false
+
+	editName:'',
+	editDescription:'',
+	editPrice:'',
+	editStock:'',
 })
 export default function(state = defaultState,action){
-	if (action.type === types.ADD_REQUEST) {
-		return state.set("isAddFetching", true)
+
+	if (action.type === types.SET_CATEGORY) {
+		return state.merge({
+			parentCategoryId:action.payload.parentCategoryId,
+			categoryId:action.payload.categoryId,
+			categoryIdValidateStatus:'',
+			categoryIdHelp:''
+		})
 	}
-	if (action.type === types.ADD_DONE) {
-		return state.set("isAddFetching", false)
+	if (action.type === types.SET_IMAGES) {
+		return state.set('images',action.payload)
 	}
-	if (action.type === types.SET_LEVEL_ONE) {
-		return state.set("levelonecategories", fromJS(action.payload))
+	if (action.type === types.SET_DETAIL) {
+		return state.set('detail',action.payload)
+	}
+	if (action.type === types.SET_CATEGORY_ERROR) {
+		return state.merge({
+			categoryIdValidateStatus:'error',
+			categoryIdHelp:'请选择所属分类'
+		})
 	}
 
 
+	if (action.type === types.SAVE_START) {
+		return state.set('isSaveFatching',true)
+	}
+	if (action.type === types.SAVE_DONE) {
+		return state.set('isSaveFatching',false)
+	}
+
+	
 	if (action.type === types.SET_PAGE) {
 		return state.merge({
 			current:action.payload.current,
@@ -41,30 +67,16 @@ export default function(state = defaultState,action){
 		return state.set("isPageFetching", false)
 	}
 
-	if (action.type === types.SHOW_UPDATE_MODAl) {
+	if (action.type === types.SET_EDIT_PRODUCT) {
 		return state.merge({
-			updateModalVisible:true,
-			updateId:action.payload.updateId,
-			updateName:action.payload.updateName
-		})
-	}
-
-	if (action.type === types.HIDE_UPDATE_MODAl) {
-		return state.merge({
-			updateModalVisible:false
-		})
-	}
-
-	if (action.type === types.CHANGE_NAME_REQUEST) {
-		return state.set("isUpdateFetching", true)
-	}
-	if (action.type === types.CHANGE_NAME_DONE) {
-		return state.set("isUpdateFetching", false)
-	}
-	
-	if (action.type === types.CHANGE_NAME) {
-		return state.merge({
-			updateName:action.payload
+			parentCategoryId:action.payload.category.pid,
+			categoryId:action.payload.category._id,
+			images:action.payload.images,
+			detail:action.payload.detail,
+			editName:action.payload.name,
+			editDescription:action.payload.description,
+			editPrice:action.payload.price,
+			editStock:action.payload.stock,
 		})
 	}
 

@@ -1,23 +1,39 @@
 import * as types from './actionTypes.js';
-import {  message } from 'antd';
-import {  request } from 'util';
-import {  ADD_CATEGORY,GET_CATEGORIES,UPDATE_NAME,UPDATE_ORDER } from 'api';
+import { message } from 'antd';
+import { request } from 'util';
+import { 
+	ADD_PRODUCT,
+	GET_PRODUCTS,
+	UPDATE_PRODUCT_ORDER,
+	UPDATE_PRODUCT_STATUS,
+	GET_PRODUCT_DETAIL 
+} from 'api';
 
 
-export const getAddRequestAction = ()=>{
+export const getSetCategoryAction = (parentCategoryId,categoryId)=>({
+	type:types.SET_CATEGORY,
+	payload:{
+		parentCategoryId,
+		categoryId
+	}
+})
+export const getSetImagesAction = (fileList)=>({
+	type:types.SET_IMAGES,
+	payload:fileList
+})
+export const getSetDetailAction = (value)=>({
+	type:types.SET_DETAIL,
+	payload:value
+})
+
+export const getSaveRequestAction = ()=>{
 	return ({
-		type:types.ADD_REQUEST
+		type:types.SAVE_START
 	})
 }
-export const getAddDoneAction = ()=>{
+export const getSaveDoneAction = ()=>{
 	return ({
-		type:types.ADD_DONE
-	})
-}
-export const setLevelOneCategoriesAction = (payload)=>{
-	return ({
-		type:types.SET_LEVEL_ONE,
-		payload
+		type:types.SAVE_DONE
 	})
 }
 
@@ -27,96 +43,73 @@ export const getPageRequestAction = ()=>{
 		type:types.PAGE_REQUEST
 	})
 }
-export const getPageDoneAction = ()=>{
-	return ({
-		type:types.PAGE_DONE
-	})
-}
 export const getSetPageAction = (payload)=>{
 	return ({
 		type:types.SET_PAGE,
 		payload
 	})
 }
-
-
-
-
-export const getUpdateNameRequestAction = ()=>{
+export const getPageDoneAction = ()=>{
 	return ({
-		type:types.CHANGE_NAME_REQUEST
-	})
-}
-export const getUpdateNameDoneAction = ()=>{
-	return ({
-		type:types.CHANGE_NAME_DONE
+		type:types.PAGE_DONE
 	})
 }
 
 
-export const getAddAction = (values)=>{
-	return (dispatch)=>{
-		const action = getAddRequestAction();
-		dispatch(action);
+
+const setCategoryError = ()=>({
+	type:types.SET_CATEGORY_ERROR
+})
+export const getSaveAction = (err,values)=>{
+	return (dispatch,getState)=>{
+		const state = getState().get('product');
+		const categoryId = state.get('categoryId');
+		if (!categoryId) {
+			dispatch(setCategoryError())
+			return;
+		}
+		if (err) {
+			return;
+		}
+		dispatch(getSaveRequestAction());
 		request({
 			method: 'post',
-			url: ADD_CATEGORY,
-			data: values
+			url: ADD_PRODUCT,
+			data: {
+				...values,
+				category:state.get('categoryId'),
+				images:state.get('images'),
+				detail:state.get('detail'),
+			}
 		})
 		.then(function (result) {
 			if (result.code === 0) {
-				if (result.data) {
-					dispatch(setLevelOneCategoriesAction(result.data));
-				}
-				message.success('添加分类成功')
-				// getLevelOneCategoriesAction();
-			}else{
-				message.error(result.message)
+				// dispatch(getSetPageAction(result.data));
+				message.success(result.message);
+				window.location.href = '/product'
 			}
-			dispatch(getAddDoneAction());
+			dispatch(getSaveDoneAction());
 		})
 		.catch((err)=> {
 			message.error('网络错误,请稍后在试!')
-			dispatch(getAddDoneAction());
+			dispatch(getSaveDoneAction());
 		});
 	}
 }
-export const getLevelOneCategoriesAction = ()=>{
-	return (dispatch)=>{
-		dispatch(getAddRequestAction());
-		request({
-			url: GET_CATEGORIES,
-			data: {
-				pid:0
-			}
-		})
-		.then(function (result) {
-			if (result.code === 0) {
-				// console.log(result);
-				dispatch(setLevelOneCategoriesAction(result.data))
-			}else{
-				message.error(result.message)
-			}
-			// dispatch(setLevelOneCategoriesAction(result.data));
-		})
-		.catch(function (err) {
-			message.error('操作失败');
-		});
-	}
-}
-export const getPageAction = (pid,page)=>{
+
+
+export const getPageAction = (page)=>{
 	return (dispatch)=>{
 		dispatch(getPageRequestAction());
 		request({
-			url: GET_CATEGORIES,
+			url: GET_PRODUCTS,
 			data: {
-				pid:pid,
 				page:page
 			}
 		})
 		.then((result)=> {
 			if (result.code === 0) {
-				// console.log('result::::::',result);
+				// console.log('result::::::',result.data);
 				dispatch(getSetPageAction(result.data));
 			}else{
 				message.error(result.message)
@@ -124,79 +117,22 @@ export const getPageAction = (pid,page)=>{
 			dispatch(getPageDoneAction());
 		})
 		.catch((err) => {
-			message.error('操作失败la');
+			message.error('网络错误,请稍后在试!');
 			dispatch(getPageDoneAction());
 		});
 	}
 }
-export const getShowUpdateModalAction = (updateId,updateName)=>{
-	return ({
-		type:types.SHOW_UPDATE_MODAl,
-		payload:{
-			updateId,
-			updateName
-		}
-	})
-}
-export const getHideUpdateModalAction = (updateId,updateName)=>{
-	return ({
-		type:types.HIDE_UPDATE_MODAl
-	})
-}
-
-export const getChangeNameAction = (payload)=>{
-	return {
-		type:types.CHANGE_NAME,
-		payload
-	}
-}
 
 
-
-export const getSetUpdateNameAction = (pid)=>{
+export const getUpdateOrderAction = (id,newOrder)=>{
 	return (dispatch,getState)=>{
-		dispatch(getUpdateNameRequestAction());
-
-		const state = getState().get('category')
+		const state = getState().get('product')
 		request({
 			method: 'put',
-			url: UPDATE_NAME,
-			data: {
-				id:state.get('updateId'),
-				name:state.get('updateName'),
-				pid:pid,
-				page:state.get('current')
-			}
-		})
-		.then((result)=> {
-			if (result.code === 0) {
-				if (result.data) {
-					dispatch(getSetPageAction(result.data));
-					dispatch(getHideUpdateModalAction());
-				}
-				message.success('更改名称成功');
-				// console.log('result::::::',result);
-					dispatch(getUpdateNameDoneAction());
-			}else{
-				message.error(result.message)
-			}
-		})
-		.catch((err) => {
-			message.error('更改名称失败');
-		});
-	}
-}
-
-export const getUpdateOrderAction = (pid,id,newOrder)=>{
-	return (dispatch,getState)=>{
-		const state = getState().get('category')
-		request({
-			method: 'put',
-			url: UPDATE_ORDER,
+			url: UPDATE_PRODUCT_ORDER,
 			data: {
 				id:id,
 				order:newOrder,
-				pid:pid,
 				page:state.get('current')
 			}
 		})
@@ -204,17 +140,75 @@ export const getUpdateOrderAction = (pid,id,newOrder)=>{
 			if (result.code === 0) {
 				if (result.data) {
 					dispatch(getSetPageAction(result.data));
-					dispatch(getHideUpdateModalAction());
+					message.success('更改排序成功');
 				}
-				message.success('更改名称成功');
 				// console.log('result::::::',result);
 			}else{
 				message.error(result.message)
 			}
 		})
 		.catch((err) => {
-			message.error('更改名称失败');
+			message.error('更改排序失败');
 		});
 	}
 }
 
+
+export const getUpdateStatusAction = (id,newStatus)=>{
+	return (dispatch,getState)=>{
+		const state = getState().get('product')
+		request({
+			method: 'put',
+			url: UPDATE_PRODUCT_STATUS,
+			data: {
+				id:id,
+				order:newStatus,
+				page:state.get('current')
+			}
+		})
+		.then((result)=> {
+			console.log(result)
+			if (result.code === 0) {
+				if (result.data) {
+					message.success('更改排序成功');
+				}
+				// console.log('result::::::',result);
+			}else{
+				dispatch(getSetPageAction(result.data));
+				message.error(result.message)
+			}
+		})
+		.catch((err) => {
+			message.error('更改排序失败');
+		});
+	}
+}
+
+
+const setEditProduct = (payload)=>({
+	type:types.SET_EDIT_PRODUCT,
+	payload
+})
+export const getEditProductAction = (productId)=>{
+	return (dispatch)=>{
+		request({
+			method: 'get',
+			url: GET_PRODUCT_DETAIL,
+			data: {
+				id:productId
+			}
+		})
+		.then((result)=> {
+			if (result.code === 0) {
+				dispatch(setEditProduct(result.data))
+			
+				// message.success('更改排序成功');
+			}else{
+				message.error(result.message)
+			}
+		})
+		.catch((err) => {
+			message.error('获取商品失败');
+		});
+	}
+}

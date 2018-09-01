@@ -13,13 +13,56 @@ class CategorySelector extends Component {
 			levelOneCategories: [],
 			levelOneCategoryId: '',
 			levelTwoCategories: [],
-			levelTwoCategoryId: ''
+			levelTwoCategoryId: '',
+			needLoadLevelTwo: false,
+			isChanged:false
 		}
+		console.log(this.props.parentCategoryId);
 		this.handleLevelOneChange = this.handleLevelOneChange.bind(this);
 		this.handleLevelTwoChange = this.handleLevelTwoChange.bind(this);
 	}
 	componentDidMount(){
 		this.LoadLevelOneCategories();
+	}
+	static getDerivedStateFromProps(props,state){
+		console.log('props',props);
+		console.log('state',state);
+
+		const levelOneCategoryIdChanged = props.parentCategoryId !== state.levelOneCategoryId;
+		const levelTwoCategoryIdChanged = props.categoryId !== state.levelTwoCategoryId;
+
+		if (!levelOneCategoryIdChanged && !levelTwoCategoryIdChanged) {
+			return null;
+		}
+
+		if (state.isChanged) {
+			return null;
+		}
+
+		if (props.parentCategoryId == 0) {
+			return {
+				levelOneCategoryId:props.categoryId,
+				levelTwoCategoryId:'',
+				isChanged:true
+			}
+		} else {
+			return {
+				levelOneCategoryId:props.parentCategoryId,
+				levelTwoCategoryId:props.categoryId,
+				needLoadLevelTwo:true,
+				isChanged:true
+			}
+		}
+		return null;
+	}
+	componentDidUpdate(){
+		if (this.state.needLoadLevelTwo) {
+			this.LoadLevelTwoCategories();
+		
+			this.setState({
+				needLoadLevelTwo:false
+			})
+		}
 	}
 	LoadLevelOneCategories(){
 		request({
@@ -90,6 +133,8 @@ class CategorySelector extends Component {
 			<div>
 				<Select 
 				style={{ width: 300 }} 
+				defaultValue={levelOneCategoryId}
+				value={levelOneCategoryId}
 				onChange={(value)=>{this.handleLevelOneChange(value)}}>
 					{levelOneOptions}
 				</Select>

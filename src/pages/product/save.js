@@ -6,7 +6,9 @@ import { connect } from 'react-redux';
 import { actionCreator } from './store';
 import MyLayout from 'common/layout';
 import UploadImage from 'common/upload-image';
+import RichEditor from 'common/rich-editor';
 import CategorySelector from './category-selector.js';
+import { PRODUCT_UPLOAD_IMAGE,PRODUCT_UPLOAD_DETAIL_IMAGE } from 'api';
 
 const FormItem = Form.Item;
 // const Option = Select.Option;
@@ -15,19 +17,32 @@ class NormalProductSave extends Component {
 	constructor(props){
 		super(props);
 		this.handleSubmit = this.handleSubmit.bind(this);
+		this.state = {
+			productId : this.props.match.params.productId
+		}
 	}
 	componentDidMount(){
-		this.props.LoadLevelOneCategories();
-	}
+		if (this.state.productId) {
+			this.props.handleEditProduct(this.state.productId)
+		}
+	};
 	handleSubmit(e) {
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
-			if (!err) {
-				this.props.handleAdd(values);
-			}
+			this.props.handleSave(err, values);
 		});
 	}
 	render(){
+		const {
+			parentCategoryId,
+			categoryId,
+			images,
+			detail,
+			editName,
+			editDescription,
+			editPrice,
+			editStock
+		} = this.props;
 		const { getFieldDecorator } = this.props.form;
 		const formItemLayout = {
 			labelCol: {
@@ -60,12 +75,13 @@ class NormalProductSave extends Component {
 				<Form onSubmit={this.handleSubmit}>
 					<FormItem
 						{...formItemLayout}
-						label="商品名称 描述 "
+						label="商品名称"
 					>
 						{getFieldDecorator('name', {
 							rules: [{
 								required: true, message: '请输入商品名称',
 							}],
+							initialValue:editName
 						})(
 							<Input />
 
@@ -79,6 +95,7 @@ class NormalProductSave extends Component {
 							rules: [{
 								required: true, message: '请输入商品描述',
 							}],
+							initialValue:editDescription
 						})(
 							<Input />
 
@@ -86,19 +103,18 @@ class NormalProductSave extends Component {
 					</FormItem>
 					<FormItem
 						{...formItemLayout}
+						required={true}
 						label="所属分类"
+						validateStatus={this.props.categoryIdValidateStatus}
+						help={this.props.categoryIdHelp}
 					>
-						{getFieldDecorator('pid', {
-							rules: [{
-								required: true, message: '请选择父级分类',
-							}],
-						})(
-							<CategorySelector 
-								getCategoryId={(pid,id)=>{
-									console.log(pid,id)
-								}}
-							/>
-						)}
+						<CategorySelector 
+							parentCategoryId={parentCategoryId}
+							categoryId={categoryId}
+							getCategoryId={(parentCategoryId,categoryId)=>{
+								this.props.handleCategory(parentCategoryId,categoryId)
+							}}
+						/>
 					</FormItem>
 					<FormItem
 						{...formItemLayout}
@@ -108,6 +124,7 @@ class NormalProductSave extends Component {
 							rules: [{
 								required: true, message: '请输入商品价格',
 							}],
+							initialValue:editPrice
 						})(
 							<InputNumber 
 								min={0}
@@ -124,6 +141,7 @@ class NormalProductSave extends Component {
 							rules: [{
 								required: true, message: '请输入商品库存',
 							}],
+							initialValue:editStock
 						})(
 							<InputNumber 
 								min={0}
@@ -137,18 +155,36 @@ class NormalProductSave extends Component {
 						{...formItemLayout}
 						label="商品图片"
 					>
-						<UploadImage />
+						<UploadImage 
+							action={PRODUCT_UPLOAD_IMAGE}
+							max={3}
+							getFileList={
+								(fileList)=>{
+									// console.log(fileList)
+									this.props.handleImages(fileList)
+								}
+							}
+						/>
 					</FormItem>
 					<FormItem
 						{...formItemLayout}
 						label="商品详情"
 					>
+						<RichEditor 
+							action={PRODUCT_UPLOAD_DETAIL_IMAGE}
+							getRichEditorValue = {
+								(value)=>{
+									console.log(value)
+									this.props.handleDetail(value)
+								}
+							}
+						/>
 					</FormItem>
 					<FormItem {...tailFormItemLayout}>
 						<Button 
 							type="primary" 
 							onClick={this.handleSubmit} 
-							loading={this.props.isAddFatching}
+							loading={this.props.isSaveFatching}
 						>
 							提交
 						</Button>
@@ -163,20 +199,36 @@ const ProductSave = Form.create()(NormalProductSave);
 
 const mapStateToProps = (state)=>{
 	return {
-		isAddFatching:state.get('category').get('isAddFatching'),
-		levelonecategories:state.get('category').get('levelonecategories')
+		categoryIdValidateStatus:state.get('product').get('categoryIdValidateStatus'),
+		categoryIdHelp:state.get('product').get('categoryIdHelp'),
+		isSaveFatching:state.get('product').get('isSaveFatching'),
+		parentCategoryId:state.get('product').get('parentCategoryId'),
+		categoryId:state.get('product').get('categoryId'),
+		images:state.get('product').get('images'),
+		detail:state.get('product').get('detail'),
+		editName:state.get('product').get('editName'),
+		editDescription:state.get('product').get('editDescription'),
+		editPrice:state.get('product').get('editPrice'),
+		editStock:state.get('product').get('editStock'),
 	}
 }
 
 const mapDispatchToProps = (dispatch)=>{
 	return {
-		handleAdd:(values)=>{
-			const action = actionCreator.getAddAction(values)
-			dispatch(action)
+		handleSave:(err,values)=>{
+			dispatch(actionCreator.getSaveAction(err,values))
 		},
-		LoadLevelOneCategories:()=>{
-			const action = actionCreator.getLevelOneCategoriesAction()
-			dispatch(action)
+		handleCategory:(parentCategoryId,categoryId)=>{
+			dispatch(actionCreator.getSetCategoryAction(parentCategoryId,categoryId))
+		},
+		handleImages:(fileList)=>{
+			dispatch(actionCreator.getSetImagesAction(fileList))
+		},
+		handleDetail:(value)=>{
+			dispatch(actionCreator.getSetDetailAction(value))
+		},
+		handleEditProduct:(productId)=>{
+			dispatch(actionCreator.getEditProductAction(productId))
 		}
 	}
 }
