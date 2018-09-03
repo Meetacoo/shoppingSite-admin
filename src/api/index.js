@@ -15,7 +15,8 @@ export const PRODUCT_UPLOAD_IMAGE = server+'/product/uploadImage';
 export const PRODUCT_UPLOAD_DETAIL_IMAGE = server+'/product/uploadDetailImage';
 
 export const GET_PRODUCTS = server+'/product';
-export const ADD_PRODUCT = server+'/product/save';
+export const SAVE_PRODUCT = server+'/product/save';
 export const UPDATE_PRODUCT_ORDER = server+'/product/updateOrder';
 export const UPDATE_PRODUCT_STATUS = server+'/product/updateStatus';
 export const GET_PRODUCT_DETAIL = server+'/product/detail';
+export const GET_PRODUCTS_SEARCH = server+'/product/search';

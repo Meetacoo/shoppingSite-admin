@@ -150,7 +150,7 @@ class CategoryList extends Component {
 						<Input 
 							value={this.props.updateName} 
 							onChange = {(e)=>{
-								{this.props.handleChangeName(e.target.value)}
+								this.props.handleChangeName(e.target.value)
 							}}
 						/>
 					</Modal>

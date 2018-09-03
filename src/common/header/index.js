@@ -33,7 +33,7 @@ class MyHeader extends Component {
 		return (
 			<Header className="header">
 				<div className="logo">
-					ashfuy
+					正版
 				</div>
 			    <div className="logout">
 					<Dropdown overlay={menu} placement="bottomCenter">

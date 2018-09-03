@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { InputNumber,Breadcrumb,Button,Table,Divider,Switch } from 'antd';
+import { InputNumber,Breadcrumb,Button,Table,Divider,Switch,Input } from 'antd';
 import { connect } from 'react-redux';
 
 
 
 import { actionCreator } from './store';
 import MyLayout from 'common/layout';
+const Search = Input.Search;
 
 
 class ProductList extends Component {
@@ -21,6 +22,7 @@ class ProductList extends Component {
 		this.props.handlePage(1);
 	};
 	render(){
+		const {keyword} = this.props;
 		const columns = [
 			{
 				title: 'ID',
@@ -30,7 +32,15 @@ class ProductList extends Component {
 			{
 				title: '商品名称',
 				dataIndex: 'name',
-				key: 'name'
+				render:(name)=>{
+					if (keyword) {
+						let reg = new RegExp('('+keyword+')','ig');
+						let html = name.replace(reg,'<b style="color:orange">$1</b>')
+						return <span dangerouslySetInnerHTML={{__html:html}}></span>
+					}else{
+						return name;
+					}
+				}
 			},
 			{
 				title: '商品状态',
@@ -86,8 +96,10 @@ class ProductList extends Component {
 				name:product.get('name'),
 				order:product.get('order'),
 				status:product.get('status'),
+				keyword:product.get('keyword')
 			}
 		}).toJS();
+
 		// console.log(data)
 		return(
 			<MyLayout>
@@ -97,6 +109,14 @@ class ProductList extends Component {
 						<Breadcrumb.Item>商品列表</Breadcrumb.Item>
 					</Breadcrumb>
 					<div className="catelist clearfix">	
+						<Search
+							placeholder="input search text"
+							onSearch={value => {
+								this.props.handleSearch(value,1)
+							}}
+							enterButton
+							style={{ width: 200 }}
+						/>
 						<Link to="/product/save" style={{float:'right'}} className="clearfix">
 							<Button 
 								type="primary" 
@@ -119,8 +139,11 @@ class ProductList extends Component {
 							} 
 						}
 						onChange={(pagination)=>{
-							console.log(pagination.current)
-							this.props.handlePage(pagination.current)
+							if (keyword) {
+								this.props.handleSearch(keyword,pagination.current)
+							}else{
+								this.props.handlePage(pagination.current)
+							}
 						}}
 						loading={
 							{
@@ -141,7 +164,8 @@ const mapStateToProps = (state)=>{
 		current:state.get('product').get('current'),
 		total:state.get('product').get('total'),
 		pageSize:state.get('product').get('pageSize'),
-		list:state.get('product').get('list')
+		list:state.get('product').get('list'),
+		keyword:state.get('product').get('keyword')
 	}
 }
 
@@ -155,6 +179,9 @@ const mapDispatchToProps = (dispatch)=>{
 		},
 		handleUpdateStatus:(id,newStatus)=>{
 			dispatch(actionCreator.getUpdateStatusAction(id,newStatus));
+		},
+		handleSearch:(keyword,page)=>{
+			dispatch(actionCreator.getSearchAction(keyword,page))
 		}
 	}
 }

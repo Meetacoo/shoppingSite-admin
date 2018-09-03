@@ -19,6 +19,7 @@ const defaultState = fromJS({
 	editDescription:'',
 	editPrice:'',
 	editStock:'',
+	keyword:''
 })
 export default function(state = defaultState,action){
 
@@ -57,7 +58,8 @@ export default function(state = defaultState,action){
 			current:action.payload.current,
 			total:action.payload.total,
 			pageSize:action.payload.pageSize,
-			list:fromJS(action.payload.list)
+			list:fromJS(action.payload.list),
+			keyword:action.payload.keyword
 		})
 	}
 	if (action.type === types.PAGE_REQUEST) {

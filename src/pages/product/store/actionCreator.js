@@ -2,11 +2,12 @@ import * as types from './actionTypes.js';
 import { message } from 'antd';
 import { request } from 'util';
 import { 
-	ADD_PRODUCT,
+	SAVE_PRODUCT,
 	GET_PRODUCTS,
 	UPDATE_PRODUCT_ORDER,
 	UPDATE_PRODUCT_STATUS,
-	GET_PRODUCT_DETAIL 
+	GET_PRODUCT_DETAIL,
+	GET_PRODUCTS_SEARCH
 } from 'api';
 
 
@@ -71,10 +72,16 @@ export const getSaveAction = (err,values)=>{
 		if (err) {
 			return;
 		}
+
+		let method = 'post';
+		if (values.id) {
+			method = 'put';
+		}
+
 		dispatch(getSaveRequestAction());
 		request({
-			method: 'post',
-			url: ADD_PRODUCT,
+			method: method,
+			url: SAVE_PRODUCT,
 			data: {
 				...values,
 				category:state.get('categoryId'),
@@ -170,7 +177,7 @@ export const getUpdateStatusAction = (id,newStatus)=>{
 			console.log(result)
 			if (result.code === 0) {
 				if (result.data) {
-					message.success('更改排序成功');
+					message.success('更改状态成功');
 				}
 				// console.log('result::::::',result);
 			}else{
@@ -179,7 +186,7 @@ export const getUpdateStatusAction = (id,newStatus)=>{
 			}
 		})
 		.catch((err) => {
-			message.error('更改排序失败');
+			message.error('更改状态失败');
 		});
 	}
 }
@@ -203,6 +210,29 @@ export const getEditProductAction = (productId)=>{
 				dispatch(setEditProduct(result.data))
 			
 				// message.success('更改排序成功');
+			}else{
+				message.error(result.message)
+			}
+		})
+		.catch((err) => {
+			message.error('获取商品失败');
+		});
+	}
+}
+
+export const getSearchAction = (keyword,page)=>{
+	return (dispatch)=>{
+		request({
+			method: 'get',
+			url: GET_PRODUCTS_SEARCH,
+			data: {
+				keyword,
+				page
+			}
+		})
+		.then((result)=> {
+			if (result.code === 0) {
+				dispatch(getSetPageAction(result.data))
 			}else{
 				message.error(result.message)
 			}

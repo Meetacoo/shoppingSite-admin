@@ -25,11 +25,15 @@ class CategorySelector extends Component {
 		this.LoadLevelOneCategories();
 	}
 	static getDerivedStateFromProps(props,state){
-		console.log('props',props);
-		console.log('state',state);
+		// console.log('props',props);
+		// console.log('state',state);
 
 		const levelOneCategoryIdChanged = props.parentCategoryId !== state.levelOneCategoryId;
 		const levelTwoCategoryIdChanged = props.categoryId !== state.levelTwoCategoryId;
+
+		if (state.levelOneCategoryId && !props.parentCategoryId && !props.categoryId) {
+			return null;
+		}
 
 		if (!levelOneCategoryIdChanged && !levelTwoCategoryIdChanged) {
 			return null;
@@ -135,7 +139,9 @@ class CategorySelector extends Component {
 				style={{ width: 300 }} 
 				defaultValue={levelOneCategoryId}
 				value={levelOneCategoryId}
-				onChange={(value)=>{this.handleLevelOneChange(value)}}>
+				onChange={(value)=>{this.handleLevelOneChange(value)}}
+				disabled={this.props.boolean}
+				>
 					{levelOneOptions}
 				</Select>
 				{
@@ -143,7 +149,8 @@ class CategorySelector extends Component {
 					? <Select
 						defaultValue={levelTwoCategoryId}
 						value={levelTwoCategoryId}
-						style={{ width: 300,marginLeft: 10 }} 
+						style={{ width: 300,marginLeft: 10 }}
+						disabled={this.props.boolean} 
 						onChange={this.handleLevelTwoChange}>
 							{levelTwoOptions}
 					</Select>

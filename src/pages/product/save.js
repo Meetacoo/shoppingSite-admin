@@ -26,9 +26,11 @@ class NormalProductSave extends Component {
 			this.props.handleEditProduct(this.state.productId)
 		}
 	};
+	
 	handleSubmit(e) {
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
+			values.id = this.state.productId;
 			this.props.handleSave(err, values);
 		});
 	}
@@ -43,6 +45,18 @@ class NormalProductSave extends Component {
 			editPrice,
 			editStock
 		} = this.props;
+		
+		let fileList = [];
+		if (images) {
+			fileList = images.split(',').map((img,index)=>({
+				uid: index,
+				status: 'done',
+				url: img,
+				response: img
+			}))
+		}
+		// console.log(fileList)
+
 		const { getFieldDecorator } = this.props.form;
 		const formItemLayout = {
 			labelCol: {
@@ -70,7 +84,13 @@ class NormalProductSave extends Component {
 			<MyLayout>
 				<Breadcrumb>
 					<Breadcrumb.Item>商品管理</Breadcrumb.Item>
-					<Breadcrumb.Item>添加商品</Breadcrumb.Item>
+					<Breadcrumb.Item>
+						{
+							this.state.productId
+							? '编辑商品'
+							: '添加商品'
+						}
+					</Breadcrumb.Item>
 				</Breadcrumb>
 				<Form onSubmit={this.handleSubmit}>
 					<FormItem
@@ -158,6 +178,7 @@ class NormalProductSave extends Component {
 						<UploadImage 
 							action={PRODUCT_UPLOAD_IMAGE}
 							max={3}
+							fileList={fileList}
 							getFileList={
 								(fileList)=>{
 									// console.log(fileList)
@@ -178,6 +199,7 @@ class NormalProductSave extends Component {
 									this.props.handleDetail(value)
 								}
 							}
+							detail={detail}
 						/>
 					</FormItem>
 					<FormItem {...tailFormItemLayout}>
