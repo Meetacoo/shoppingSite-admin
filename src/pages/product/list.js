@@ -32,6 +32,7 @@ class ProductList extends Component {
 			{
 				title: '商品名称',
 				dataIndex: 'name',
+				key:'name',
 				render:(name)=>{
 					if (keyword) {
 						let reg = new RegExp('('+keyword+')','ig');
