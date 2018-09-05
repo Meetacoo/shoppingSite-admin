@@ -48,12 +48,6 @@ class NormalProductDetail extends Component {
 					<img src={img} />
 				</li>
 			))
-			/*fileList = images.split(',').map((img,index)=>({
-				uid: index,
-				status: 'done',
-				url: img,
-				response: img
-			}))*/
 		}
 		const formItemLayout = {
 			labelCol: {
