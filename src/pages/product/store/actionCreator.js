@@ -61,14 +61,31 @@ export const getPageDoneAction = ()=>{
 const setCategoryError = ()=>({
 	type:types.SET_CATEGORY_ERROR
 })
+
+const setImagesError = ()=>({
+	type:types.SET_IMAGES_ERROR
+})
 export const getSaveAction = (err,values)=>{
 	return (dispatch,getState)=>{
 		const state = getState().get('product');
 		const categoryId = state.get('categoryId');
+		const images = state.get('images');
+		let hasError = false;
+		console.log(images)
 		if (!categoryId) {
 			dispatch(setCategoryError())
+			// return;
+			hasError = true;
+		}
+		if (!images) {
+			dispatch(setImagesError())
+			// return;
+			hasError = true;
+		}
+		if (hasError) {
 			return;
 		}
+		console.log(err)
 		if (err) {
 			return;
 		}
@@ -116,7 +133,7 @@ export const getPageAction = (page)=>{
 		})
 		.then((result)=> {
 			if (result.code === 0) {
-				// console.log('result::::::',result.data);
+				console.log('result::::::',result.data);
 				dispatch(getSetPageAction(result.data));
 			}else{
 				message.error(result.message)
@@ -169,7 +186,7 @@ export const getUpdateStatusAction = (id,newStatus)=>{
 			url: UPDATE_PRODUCT_STATUS,
 			data: {
 				id:id,
-				order:newStatus,
+				status:newStatus,
 				page:state.get('current')
 			}
 		})

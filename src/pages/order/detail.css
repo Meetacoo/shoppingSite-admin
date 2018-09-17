@@ -1,0 +1,58 @@
+.imgBox li{
+	width: 80px;
+	height: 100px;
+	list-style: none;
+	float: left;
+	margin-right: 5px;
+	padding: 5px;
+	border: 1px solid #ddd;
+}
+.imgBox img{
+	width: 100%;
+}
+
+.product-item {
+	height: 80px;
+	line-height: 80px;
+	margin-bottom: 15px;
+	border: 1px solid #ddd;
+}
+/*商品列表*/
+.product-select{
+	width: 6%;
+}
+.product-info{
+	width: 70%;
+}
+.product-price{
+	width: 10%;
+}
+.product-count{
+	width: 10%;
+}
+.product-totalPrice{
+	width: 10%;
+}
+.gocart-btn{
+	margin: 0 auto;
+}
+.order-detail li{
+	font-size: 14px;
+	height: 40px;
+}
+.order-detail .link{
+	color: #666;
+}
+.order-detail .link:hover{
+	color: orange;
+}
+.order-payment .text{
+	color: orange;
+	font-size: 14px;
+}
+.product-item{
+	margin-bottom: -1px;
+}
+.pagination-box{
+	margin-top: 30px;
+}

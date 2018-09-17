@@ -20,3 +20,7 @@ export const UPDATE_PRODUCT_ORDER = server+'/product/updateOrder';
 export const UPDATE_PRODUCT_STATUS = server+'/product/updateStatus';
 export const GET_PRODUCT_DETAIL = server+'/product/detail';
 export const GET_PRODUCTS_SEARCH = server+'/product/search';
+
+export const GET_ORDERS = server+'/order';
+export const GET_ORDER_DETAIL = server+'/order/detail';
+export const ORDER_SEARCH = server+'/order/search';

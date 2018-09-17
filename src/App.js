@@ -14,6 +14,7 @@ import Login from './pages/login';
 import User from './pages/user';
 import Category from './pages/category';
 import Product from './pages/product';
+import Order from './pages/order';
 import ErrorPage from './pages/errorpage'
 
 class App extends Component {
@@ -42,6 +43,7 @@ class App extends Component {
 					<ProtectedRoute path="/user" component={ User } />
 					<ProtectedRoute path="/category" component={ Category } />
 					<ProtectedRoute path="/product" component={ Product } />
+					<ProtectedRoute path="/order" component={ Order } />
 					<LoginRoute path="/login" component={ Login } />
 					<Route component={ ErrorPage } />
 				</Switch>
