@@ -4,7 +4,8 @@ import { request } from 'util';
 import {
 	GET_ORDERS,
 	GET_ORDER_DETAIL,
-	ORDER_SEARCH
+	ORDER_SEARCH,
+	UPDATE_ORDER_DELIVER
 } from 'api';
 
 
@@ -87,9 +88,36 @@ export const getOrderDetailAction = (orderNo)=>{
 			}
 		})
 		.then((result)=> {
-			console.log(result)
+			// console.log(result)
 			if (result.code === 0) {
-				console.log('result.data:::',result.data)
+				// console.log('result.data:::',result.data)
+				dispatch(setOrderDetail(result.data))
+			
+				// message.success('更改排序成功');
+			}else{
+				message.error(result.message)
+			}
+		})
+		.catch((err) => {
+			message.error('获取商品失败');
+		});
+	}
+}
+
+export const getOrderDeliverAction = (orderNo)=>{
+	console.log("orderNo:::",orderNo)
+	return (dispatch)=>{
+		request({
+			method: 'put',
+			url: UPDATE_ORDER_DELIVER,
+			data: {
+				id:orderNo
+			}
+		})
+		.then((result)=> {
+			console.log("result:::",result)
+			if (result.code === 0) {
+				// console.log('result.data:::',result.data)
 				dispatch(setOrderDetail(result.data))
 			
 				// message.success('更改排序成功');

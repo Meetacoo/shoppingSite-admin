@@ -160,6 +160,7 @@ class ProductList extends Component {
 }
 
 const mapStateToProps = (state)=>{
+	console.log("state:::",state)
 	return {
 		isPageFetching:state.get('product').get('isPageFetching'),
 		current:state.get('product').get('current'),

@@ -24,3 +24,4 @@ export const GET_PRODUCTS_SEARCH = server+'/product/search';
 export const GET_ORDERS = server+'/order';
 export const GET_ORDER_DETAIL = server+'/order/detail';
 export const ORDER_SEARCH = server+'/order/search';
+export const UPDATE_ORDER_DELIVER = server+'/order/deliver';

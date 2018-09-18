@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Breadcrumb } from 'antd';
+import { Breadcrumb,Button,Popconfirm,Message } from 'antd';
 import { connect } from 'react-redux';
 import { actionCreator } from './store';
 import moment from 'moment';
@@ -17,6 +17,9 @@ class OrderDetail extends Component {
 		}
 		// this.handleOrder();
 	};
+	/*handleOrder(){
+		this.props.handleOrderDetail(this.state.orderNo);
+	}*/
 	componentDidMount(){
 		// this.props.handleOrderDetail(this.state.orderNo);
 		if (this.state.orderNo) {
@@ -39,7 +42,6 @@ class OrderDetail extends Component {
 			createdTime = moment(createdAt).format('YYYY-MM-DD HH:mm:ss')
 		}
 		
-		
 		return(
 			<MyLayout>
 				<Breadcrumb>
@@ -49,54 +51,69 @@ class OrderDetail extends Component {
 				{
 					orderNo
 					? <div className="order-detail">
+						<p className="title">订单信息</p>
 						<ul className="order-title clearfix">
 							<li className="order-no">
-								<span className="lable">订单号:</span>
+								<span className="lable">订单号：</span>
 								<span className="text">{orderNo}</span>
 							</li>
 							<li className="order-created-time">
-								<span className="lable">创建时间:</span>
+								<span className="lable">创建时间：</span>
 								<span className="text">{createdTime}</span>
 							</li>
 							<li className="order-shipping-name">
-								<span className="lable">收件人:</span>
+								<span className="lable">收件人：</span>
 								<span className="text">{shipping.name}({shipping.phone})</span>
 							</li>
 							<li className="order-shipping-address">
-								<span className="lable">收货地址:</span>
-								<span className="text">{shipping.province} {shipping.city} {shipping.address} (邮编:{shipping.zip})</span>
+								<span className="lable">收货地址：</span>
+								<span className="text">{shipping.province} {shipping.city} {shipping.address} (邮编：{shipping.zip})</span>
 							</li>
 							<li className="order-status-desc">
-								<span className="lable">订单状态:</span>
+								<span className="lable">订单状态：</span>
 								<span className="text">{statusDesc}</span>
 							</li>
 							<li className="order-payment">
-								<span className="lable">订单金额:</span>
+								<span className="lable">订单金额：</span>
 								<span className="text">￥ {payment}</span>
 							</li>
 							<li className="order-paymentTypeDesc">
-								<span className="lable">支付方式:</span>
+								<span className="lable">支付方式：</span>
 								<span className="text">{paymentTypeDesc}</span>
 							</li>
-							<li className="order-detail">
-								<a href="./payment.html?orderNo={orderNo}" className="btns go-submit-btn">去支付</a>
-								<span className="btns cancel-order-btn">取消支付</span>
-							</li>
-							<li className="order-detail">
+							<li className="order-opreation">
+								{
+									status == "30"
+									? <Popconfirm 
+									placement="top" 
+									title={"确定已发货"} 
+									onConfirm={()=>{
+										// alert(orderNo)
+										this.props.handleOrderDeliver(orderNo)
+										// console.log(orderNo)
+									}} 
+									okText="确定" 
+									cancelText="取消">
+									<Button type="primary">发货</Button>
+									</Popconfirm>
+									: null
+								}
 							</li>
 						</ul>
+						<p className="title">商品信息</p>
 						<ul className="product-title clearfix">
-							<li className="product-info">商品信息</li>
+							<li className="product-info">商品</li>
 							<li className="product-price">单价</li>
 							<li className="product-count">数量</li>
 							<li className="product-totalPrice">小计</li>
 						</ul>
+						
 						{
 							productList.map((product,index)=>{
-								return
-								<ul className="product-item clearfix" key={index}>
+								console.log("product:::",product)
+								return <ul className="product-item clearfix" key={index}>
 									<li className="product-info">
-										<a href="" target="_blank" className="link">
+										<a href={"/product/detail/" + product.productId} target="_blank" className="link">
 											<img src={product.images.split(",")[0]} alt="" /> 
 											<span>{product.name}</span>
 										</a>
@@ -111,7 +128,6 @@ class OrderDetail extends Component {
 								</ul>
 							})
 						}
-						
 					</div>
 					: null
 				}
@@ -133,7 +149,11 @@ const mapDispatchToProps = (dispatch)=>{
 	return {
 		handleOrderDetail:(orderNo)=>{
 			dispatch(actionCreator.getOrderDetailAction(orderNo))
-		}
+		},
+		handleOrderDeliver:(orderNo)=>{
+			console.log("orderNo::::::::",orderNo)
+			dispatch(actionCreator.getOrderDeliverAction(orderNo))
+		},
 	}
 }
 
